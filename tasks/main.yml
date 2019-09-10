@@ -1,11 +1,23 @@
 ---
 - import_tasks: include-vars.yml
 
+- name: Install required packages
+  become: true
+  package:
+    state: present
+    name: "{{ item }}"
+  with_items: "{{ packages }}"
+  register: task_result
+  until: task_result is success
+  retries: 5
+
 - import_tasks: install-with-package.yml
   when: not certbot_install_from_source
 
 - import_tasks: install-from-source.yml
   when: certbot_install_from_source
+
+- import_tasks: firewall.yml
 
 - include_tasks: create-cert-standalone.yml
   with_items: "{{ certbot_certs }}"

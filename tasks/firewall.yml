@@ -1,0 +1,17 @@
+---
+
+- name: Enable firewalld
+  become: true
+  systemd:
+    name: firewalld
+    enabled: yes
+    state: started
+
+- name: Enable Firewall port 80
+  become: true
+  firewalld:
+    service: http
+    state: enabled
+    permanent: true
+    immediate: true
+
