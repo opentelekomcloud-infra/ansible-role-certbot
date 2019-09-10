@@ -23,7 +23,7 @@ certbot_create_command: >-
   -d {{ cert_item.domains | join(',') }}
 
 certbot_create_standalone_stop_services:
-  - nginx
+  # - nginx
   # - apache
   # - varnish
 

@@ -6,3 +6,11 @@
     minute: "{{ certbot_auto_renew_minute }}"
     hour: "{{ certbot_auto_renew_hour }}"
     user: "{{ certbot_auto_renew_user }}"
+  when: ansible_os_family != 'RedHat'
+
+- name: Enable systemd renewal
+  systemd:
+    name: certbot-renew.timer
+    enabled: yes
+    state: started
+  when: ansible_os_family == 'RedHat'
