@@ -21,11 +21,16 @@ certbot_certs: []
 # - domains:
 #     - example3.com
 certbot_script: "{{ certbot_package }}"
+certbot_certname: "{{ cert_item | first | replace('*.', '') }}"
+
 certbot_create_command: >-
   {{ certbot_script }} certonly --standalone --noninteractive --agree-tos
+  --cert-name {{ certbot_certname }}
   --email {{ cert_item.email | default(certbot_admin_email) }}
   -d {{ cert_item.domains | join(',') }}
   --allow-subset-of-names
   {{ certbot_additional_options | default(omit) }}
+
+certbot_lineage: "/etc/letsencrypt/live/{{ certbot_certname }}"
 
 packages: []
