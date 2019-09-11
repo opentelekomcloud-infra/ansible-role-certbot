@@ -1,5 +1,6 @@
 ---
 - name: Add cron job for certbot renewal (if configured).
+  become: true
   cron:
     name: Certbot automatic renewal.
     job: "{{ certbot_script }} renew {{ certbot_auto_renew_options }}"
@@ -9,6 +10,7 @@
   when: ansible_os_family != 'RedHat'
 
 - name: Enable systemd renewal
+  become: true
   systemd:
     name: certbot-renew.timer
     enabled: yes

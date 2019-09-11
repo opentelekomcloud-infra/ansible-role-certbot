@@ -11,21 +11,18 @@
   until: task_result is success
   retries: 5
 
-- import_tasks: install-with-package.yml
-  when: not certbot_install_from_source
-
-- import_tasks: install-from-source.yml
-  when: certbot_install_from_source
-
 - import_tasks: firewall.yml
+  when: ansible_os_family == 'RedHat'
 
 - include_tasks: create-cert-standalone.yml
-  with_items: "{{ certbot_certs }}"
+  loop: "{{ certbot_certs }}"
   when:
     - certbot_create_if_missing
     - certbot_create_method == 'standalone'
   loop_control:
     loop_var: cert_item
+
+- import_tasks: deploy_hooks.yml
 
 - import_tasks: renew-cron.yml
   when: certbot_auto_renew

@@ -1,0 +1,39 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+platforms:
+  - name: instance
+    box: generic/fedora30
+provisioner:
+  name: ansible
+  playbooks:
+    prepare: prepare.yml
+    converge: ../playbook.yml
+  lint:
+    name: ansible-lint
+  inventory:
+    group_vars:
+      all:
+        certbot_certs:
+          - email: admin@test.com
+            domains: 
+             - example1.org
+             - example2.org
+             - example3.org
+          - domains:
+             - example10.com
+             - example11.com
+            deploy:
+              location: /etc/ssl/certs
+              owner: vagrant
+              group: vagrant
+verifier:
+  name: testinfra
+  lint:
+    name: flake8

@@ -1,0 +1,22 @@
+---
+
+- name: Ensure /etc/letsencrypt folders exists
+  become: true
+  file:
+    path: /etc/letsencrypt/renewal-hooks/deploy
+    state: directory
+    recurse: true
+
+- name: Deploy-hook
+  become: true
+  template:
+    dest: /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
+    src: deploy_hook.sh.j2
+    mode: 0774
+
+- name: Invoke deploy-hook to provision generated certificates
+  become: true
+  shell: >-
+    RENEWED_DOMAINS={{ certbot_certs | map(attribute='domains') | map('first') | map('replace', '*.', '') | join (' ') | quote }} &&
+    /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
+  when: certbot_create_if_missing

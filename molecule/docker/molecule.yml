@@ -1,0 +1,41 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+lint:
+  name: yamllint
+platforms:
+  - name: instance
+    image: fedora:30
+    privileged: true
+    volumes:
+      - "/sys/fs/cgroup:/sys/fs/cgroup:rw"
+    command: "/usr/sbin/init"
+    tty: true
+    environment:
+      container: docker
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+  playbooks:
+    prepare: prepare.yml
+    converge: ../playbook.yml
+  inventory:
+    group_vars:
+      all:
+        certbot_certs:
+          - email: admin@test.com
+            domains: 
+             - example1.org
+             - example2.org
+             - example3.org
+          - domain:
+             - example10.com
+             - example11.com
+verifier:
+  name: testinfra
+  directory: ../tests
+  lint:
+    name: flake8
