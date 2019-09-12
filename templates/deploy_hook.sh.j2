@@ -25,6 +25,10 @@ for domain in $RENEWED_DOMAINS; do
       chmod 400 "$daemon_cert_root/$domain.cert" \
               "$daemon_cert_root/$domain.key"
 
+{% if domain.deploy.post_hook %}
+      {{ domain.deploy.post_hook }}
+{% endif %}
+
     fi 
     ;;
 {% endif %}

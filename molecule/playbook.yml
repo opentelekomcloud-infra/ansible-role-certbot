@@ -2,7 +2,6 @@
 - name: Converge
   hosts: all
   vars:
-    certbot_additional_options: "--dry-run"
-    certbot_create_if_missing: false
+    certbot_skip_generation: true
   roles:
     - role: ansible-role-certbot

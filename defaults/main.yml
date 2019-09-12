@@ -20,17 +20,22 @@ certbot_certs: []
 #     - example2.com
 # - domains:
 #     - example3.com
+#   deploy:
+#     location: /etc/ssl/certs
+#     owner: test_user
+#     post_hook: "servicectl restart dummy"
 certbot_script: "{{ certbot_package }}"
 
 certbot_create_command: >-
   {{ certbot_script }} certonly --standalone --noninteractive --agree-tos
-  --cert-name {{ certbot_certname }}
+  --cert-name {{ cert_certname }}
   --email {{ cert_item.email | default(certbot_admin_email) }}
   -d {{ cert_item.domains | join(',') }}
   --allow-subset-of-names
-  {{ certbot_additional_options | default(omit) }}
 
 cert_certname: "{{ cert_item.domains | first | replace('*.', '') }}"
 cert_lineage: "/etc/letsencrypt/live/{{ cert_certname }}"
 
 packages: []
+# Variable for tests to skip certificate generation even if required
+certbot_skip_generation: false
