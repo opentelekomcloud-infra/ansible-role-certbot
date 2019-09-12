@@ -5,10 +5,10 @@ set -e
 for domain in $RENEWED_DOMAINS; do
   case $domain in
 {% for domain in certbot_certs %}
-{% if domain['deploy'] is defined %}
-  {{ domain['domains'] | first | replace('*.', '') }})
+{% if domain.deploy is defined %}
+  {{ domain.domains | first | replace('*.', '') }})
     if [ -d "$RENEWED_LINEAGE" ]; then
-      daemon_cert_root={{ domain['deploy']['location'] }}
+	    daemon_cert_root={{ domain.deploy.location | default('/etc/ssl/certs') }}
   
       # Make sure the certificate and private key files are
       # never world readable, even just for an instant while
@@ -20,12 +20,14 @@ for domain in $RENEWED_DOMAINS; do
   
       # Apply the proper file ownership and permissions for
       # the daemon to read its certificate and key.
-      chown {{ domain['deploy']['owner'] }} "$daemon_cert_root/$domain.cert" \
+{% if domain.deploy.owner is defined and domain.deploy.owner %}
+      chown {{ domain.deploy.owner }} "$daemon_cert_root/$domain.cert" \
               "$daemon_cert_root/$domain.key"
+ {% endif %}
       chmod 400 "$daemon_cert_root/$domain.cert" \
               "$daemon_cert_root/$domain.key"
 
-{% if domain.deploy.post_hook %}
+{% if domain.deploy.post_hook is defined and domain.deploy.post_hook|length%}
       {{ domain.deploy.post_hook }}
 {% endif %}
 

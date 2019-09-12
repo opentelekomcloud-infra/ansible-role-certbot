@@ -26,6 +26,7 @@ provisioner:
              - example1.org
              - example2.org
              - example3.org
+            deploy:
           - domains:
              - example10.com
              - example11.com
@@ -33,7 +34,6 @@ provisioner:
               location: /etc/ssl/certs
               owner: vagrant
               post_hook: "systemctl restart srv > /dev/null"
-              group: vagrant
 verifier:
   name: testinfra
   lint:
