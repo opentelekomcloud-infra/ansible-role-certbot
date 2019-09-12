@@ -1,14 +1,11 @@
 # Ansible Role: Certbot (for Let's Encrypt)
 
-[![Build Status](https://travis-ci.org/geerlingguy/ansible-role-certbot.svg?branch=master)](https://travis-ci.org/geerlingguy/ansible-role-certbot)
+[![Build Status](https://travis-ci.org/opentelekomcloud_infra/ansible-role-certbot.svg?branch=master)](https://travis-ci.org/opentelekomcloud_infra/ansible-role-certbot)
 
 Installs and configures Certbot (for Let's Encrypt).
 
 ## Requirements
 
-If installing from source, Git is required. You can install Git using the `geerlingguy.git` role.
-
-Generally, installing from source (see section `Source Installation from Git`) leads to a better experience using Certbot and Let's Encrypt, especially if you're using an older OS release.
 
 ## Role Variables
 
@@ -44,36 +41,16 @@ The email address used to agree to Let's Encrypt's TOS and subscribe to cert-rel
       #     - example2.com
       # - domains:
       #     - example3.com
+      #   deploy:
+      #     location: /etc/ssl/certs
+      #     owner: fake_user
+      #     post_hook: "systemctl restart fake_service"
 
 A list of domains (and other data) for which certs should be generated. You can add an `email` key to any list item to override the `certbot_admin_email`.
 
     certbot_create_command: "{{ certbot_script }} certonly --standalone --noninteractive --agree-tos --email {{ cert_item.email | default(certbot_admin_email) }} -d {{ cert_item.domains | join(',') }}"
 
 The `certbot_create_command` defines the command used to generate the cert.
-
-#### Standalone Certificate Generation
-
-    certbot_create_standalone_stop_services:
-      - nginx
-
-Services that should be stopped while `certbot` runs it's own standalone server on ports 80 and 443. If you're running Apache, set this to `apache2` (Ubuntu), or `httpd` (RHEL), or if you have Nginx on port 443 and something else on port 80 (e.g. Varnish, a Java app, or something else), add it to the list so it is stopped when the certificate is generated.
-
-These services will only be stopped the first time a new cert is generated.
-
-### Source Installation from Git
-
-You can install Certbot from it's Git source repository if desired. This might be useful in several cases, but especially when older distributions don't have Certbot packages available (e.g. CentOS < 7, Ubuntu < 16.10 and Debian < 8).
-
-    certbot_install_from_source: false
-    certbot_repo: https://github.com/certbot/certbot.git
-    certbot_version: master
-    certbot_keep_updated: true
-
-Certbot Git repository options. To install from source, set `certbot_install_from_source` to `yes`. This clones the configured `certbot_repo`, respecting the `certbot_version` setting. If `certbot_keep_updated` is set to `yes`, the repository is updated every time this role runs.
-
-    certbot_dir: /opt/certbot
-
-The directory inside which Certbot will be cloned.
 
 ### Wildcard Certificates
 
@@ -95,7 +72,7 @@ None.
         certbot_auto_renew_hour: "5"
     
       roles:
-        - geerlingguy.certbot
+        - opentelekomcloud_infra.certbot
 
 See other examples in the `tests/` directory.
 
@@ -137,4 +114,5 @@ MIT / BSD
 
 ## Author Information
 
-This role was created in 2016 by [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+This role was inherited from work of [Jeff Geerling](https://www.jeffgeerling.com/), author of [Ansible for DevOps](https://www.ansiblefordevops.com/).
+

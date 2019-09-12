@@ -14,6 +14,9 @@
 - import_tasks: firewall.yml
   when: ansible_os_family == 'RedHat'
 
+# install deploy hook before it might be executed
+- import_tasks: deploy_hooks.yml
+
 - include_tasks: create-cert-standalone.yml
   loop: "{{ certbot_certs }}"
   when:
@@ -21,8 +24,6 @@
     - certbot_create_method == 'standalone'
   loop_control:
     loop_var: cert_item
-
-- import_tasks: deploy_hooks.yml
 
 - import_tasks: renew-cron.yml
   when: certbot_auto_renew

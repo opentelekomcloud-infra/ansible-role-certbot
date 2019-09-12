@@ -13,14 +13,3 @@
     dest: /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
     src: deploy_hook.sh.j2
     mode: 0774
-
-- name: Invoke deploy-hook to provision generated certificates  # noqa 305 301
-  become: true
-  shell: >-
-    RENEWED_DOMAINS={{ cert_item.domains | join(' ') | quote }}
-    RENEWED_LINEAGE={{ cert_lineage | quote }}
-    /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
-  when: not certbot_skip_generation
-  loop: "{{ certbot_certs }}"
-  loop_control:
-    loop_var: cert_item
