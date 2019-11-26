@@ -21,7 +21,7 @@
   loop: "{{ certbot_certs }}"
   when:
     - certbot_create_if_missing
-    - certbot_create_method == 'standalone'
+    - certbot_create_method in ['standalone', 'standalone_port', 'webroot']
   loop_control:
     loop_var: cert_item
 

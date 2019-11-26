@@ -1,0 +1,3 @@
+---
+certbot_create_command: "{{ certbot_base_create_command }} --standalone --http-01-port=8888"
+certbot_auto_renew_options: "{{ certbot_auto_renew_base_options }} --tls-sni-01-port=8888"

@@ -16,3 +16,12 @@
     enabled: yes
     state: started
   when: ansible_os_family == 'RedHat'
+
+- name: Modify certbot config for renewals options
+  become: true
+  replace:
+    dest: "/etc/sysconfig/certbot"
+    regexp: "^CERTBOT_ARGS=.*"
+    replace: "CERTBOT_ARGS=\"{{ certbot_auto_renew_options }}\""
+  when: ansible_os_family == "RedHat"
+

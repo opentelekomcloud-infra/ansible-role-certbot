@@ -10,3 +10,18 @@
         - "default.yml"
       paths:
         - 'vars'
+
+- name: Load standalone mode variables
+  include_vars: 
+    file: standalone.yml
+  when: certbot_create_method == "standalone"
+
+- name: Load standalone mode variables
+  include_vars: 
+    file: standalone_port.yml
+  when: certbot_create_method == "standalone_port"
+
+- name: Load webroot mode variables
+  include_vars: 
+    file: webroot.yml
+  when: certbot_create_method == "webroot"

@@ -8,7 +8,7 @@ for domain in $RENEWED_DOMAINS; do
 {% if domain.deploy is defined %}
   {{ domain.domains | first | replace('*.', '') }})
     if [ -d "$RENEWED_LINEAGE" ]; then
-	    daemon_cert_root={{ domain.deploy.location | default('/etc/ssl/certs') }}
+      daemon_cert_root={{ domain.deploy.location | default('/etc/ssl/certs') }}
   
       # Make sure the certificate and private key files are
       # never world readable, even just for an instant while
@@ -17,18 +17,25 @@ for domain in $RENEWED_DOMAINS; do
   
       cp "$RENEWED_LINEAGE/fullchain.pem" "$daemon_cert_root/$domain.cert"
       cp "$RENEWED_LINEAGE/privkey.pem" "$daemon_cert_root/$domain.key"
+
+{% if domain.deploy.haproxy_mode | default(false) %}
+      cat "$RENEWED_LINEAGE/fullchain.pem" "$RENEWED_LINEAGE/privkey.pem" | tee
+      "daemon_cert_root/$domain.haproxy.pem"
+{% endif %}
   
       # Apply the proper file ownership and permissions for
       # the daemon to read its certificate and key.
-{% if domain.deploy.owner is defined and domain.deploy.owner %}
-      chown {{ domain.deploy.owner }} "$daemon_cert_root/$domain.cert" \
+{% if domain.deploy.owner is defined and domain.deploy.owner|length %}
+      if [ `id -u {{ domain.deploy.owner }} 2>/dev/null || echo -1` -ge 0 ]; then 
+        chown {{ domain.deploy.owner }} "$daemon_cert_root/$domain.cert" \
               "$daemon_cert_root/$domain.key"
- {% endif %}
+      fi
+{% endif %}
       chmod 400 "$daemon_cert_root/$domain.cert" \
               "$daemon_cert_root/$domain.key"
 
 {% if domain.deploy.post_hook is defined and domain.deploy.post_hook|length%}
-      {{ domain.deploy.post_hook }}
+      {{ domain.deploy.post_hook }} || true
 {% endif %}
 
     fi 

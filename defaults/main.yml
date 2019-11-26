@@ -4,7 +4,7 @@ certbot_auto_renew: true
 certbot_auto_renew_user: "root"
 certbot_auto_renew_hour: "3"
 certbot_auto_renew_minute: "30"
-certbot_auto_renew_options: "--quiet --no-self-upgrade"
+certbot_auto_renew_base_options: ""
 
 # Default value overridden in the vars
 certbot_package: certbot
@@ -20,14 +20,15 @@ certbot_certs: []
 #     - example2.com
 # - domains:
 #     - example3.com
+#   mode: standalone
 #   deploy:
 #     location: /etc/ssl/certs
 #     owner: test_user
-#     post_hook: "servicectl restart dummy"
+#     post_hook: "servicectl restart haproxy"
 certbot_script: "{{ certbot_package }}"
 
-certbot_create_command: >-
-  {{ certbot_script }} certonly --standalone --noninteractive --agree-tos
+certbot_base_create_command: >-
+  {{ certbot_script }} certonly --noninteractive --agree-tos
   --cert-name {{ cert_certname }}
   --email {{ cert_item.email | default(certbot_admin_email) }}
   -d {{ cert_item.domains | join(',') }}
