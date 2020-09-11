@@ -19,7 +19,7 @@ for domain in $RENEWED_DOMAINS; do
       cp "$RENEWED_LINEAGE/privkey.pem" "$daemon_cert_root/$domain.key"
 
 {% if domain.deploy.haproxy_mode | default(false) %}
-      cat "$RENEWED_LINEAGE/fullchain.pem" "$RENEWED_LINEAGE/privkey.pem" | tee
+      cat "$RENEWED_LINEAGE/fullchain.pem" "$RENEWED_LINEAGE/privkey.pem" | tee \
       "$daemon_cert_root/$domain.haproxy.pem"
 {% endif %}
   
