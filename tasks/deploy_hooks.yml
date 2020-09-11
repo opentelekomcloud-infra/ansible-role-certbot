@@ -13,3 +13,10 @@
     dest: /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
     src: deploy_hook.sh.j2
     mode: 0774
+
+- name: Pre-hook
+  become: true
+  template:
+    dest: /etc/letsencrypt/renewal-hooks/pre/pre_hook.sh
+    src: pre_hook.sh.j2
+    mode: 0774
