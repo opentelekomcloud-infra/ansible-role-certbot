@@ -3,9 +3,12 @@
 - name: Ensure /etc/letsencrypt folders exists
   become: true
   file:
-    path: /etc/letsencrypt/renewal-hooks/deploy
+    path: "{{ item.path }}"
     state: directory
     recurse: true
+  loop:
+    - {path: "/etc/letsencrypt/renewal-hooks/deploy"}
+    - {path: "/etc/letsencrypt/renewal-hooks/pre"}
 
 - name: Deploy-hook
   become: true
