@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+{% if domain.deploy.pre_hook is defined and domain.deploy.pre_hook|length%}
+      {{ domain.deploy.pre_hook }} || true
+{% endif %}
+
