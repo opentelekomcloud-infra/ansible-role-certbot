@@ -2,7 +2,7 @@
 
 set -e
 
-{% if domain.deploy.pre_hook is defined and domain.deploy.pre_hook|length%}
-      {{ domain.deploy.pre_hook }} || true
+{% if certbot.pre_hook is defined and certbot.pre_hook|length%}
+      {{ certbot.pre_hook }} || true
 {% endif %}
 
