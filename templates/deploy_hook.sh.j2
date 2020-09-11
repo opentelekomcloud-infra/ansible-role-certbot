@@ -20,7 +20,7 @@ for domain in $RENEWED_DOMAINS; do
 
 {% if domain.deploy.haproxy_mode | default(false) %}
       cat "$RENEWED_LINEAGE/fullchain.pem" "$RENEWED_LINEAGE/privkey.pem" | tee
-      "daemon_cert_root/$domain.haproxy.pem"
+      "$daemon_cert_root/$domain.haproxy.pem"
 {% endif %}
   
       # Apply the proper file ownership and permissions for
