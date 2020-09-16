@@ -5,6 +5,11 @@
     path: /etc/letsencrypt/live/{{ cert_certname }}/cert.pem
   register: letsencrypt_cert
 
+- name: Issue pre_hook command if configured
+  become: true
+  command: "{{ certbot_pre_hook }}"
+  when: certbot_pre_hook is defined
+
 - name: Generate new certificate if one doesn't exist.
   become: true
   command: "{{ certbot_create_command }}"

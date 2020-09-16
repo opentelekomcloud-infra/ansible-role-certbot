@@ -23,3 +23,4 @@
     dest: /etc/letsencrypt/renewal-hooks/pre/pre_hook.sh
     src: pre_hook.sh.j2
     mode: 0774
+  when: certbot_pre_hook is defined
