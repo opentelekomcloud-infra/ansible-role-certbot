@@ -18,10 +18,10 @@
 - name: Invoke deploy-hook to provision generated certificates  # noqa 305
   become: true
   shell: >-
-    RENEWED_DOMAINS={{ cert_item.domains | join(' ') | quote }}
+    RENEWED_DOMAINS={{ cert.domains | join(' ') | quote }}
     RENEWED_LINEAGE={{ cert_lineage | quote }}
     /etc/letsencrypt/renewal-hooks/deploy/deploy_hook.sh
   when: not letsencrypt_cert.stat.exists and not certbot_skip_generation
   loop: "{{ certbot_certs }}"
   loop_control:
-    loop_var: cert_item
+    loop_var: cert
