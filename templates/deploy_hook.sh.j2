@@ -28,10 +28,10 @@ for domain in $RENEWED_DOMAINS; do
       # the daemon to read its certificate and key.
 {% if domain.deploy.owner is defined and domain.deploy.owner|length %}
       if [ `id -u {{ domain.deploy.owner }} 2>/dev/null || echo -1` -ge 0 ]; then 
-        chown {{ domain.deploy.owner }} "$daemon_cert_root/$domain.{cert,key,pem}" || true
+        chown {{ domain.deploy.owner }} $daemon_cert_root/$domain.{cert,key,pem} || true
       fi
 {% endif %}
-      chmod 400 "$daemon_cert_root/$domain.{cert,key,pem}" || true
+      chmod 400 $daemon_cert_root/$domain.{cert,key,pem} || true
 
 {% if domain.deploy.post_hook is defined and domain.deploy.post_hook|length%}
       {{ domain.deploy.post_hook }} || true
