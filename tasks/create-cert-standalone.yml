@@ -9,6 +9,7 @@
   become: true
   command: "{{ certbot_pre_hook }}"
   when: certbot_pre_hook is defined
+  ignore_errors: yes
 
 - name: Generate new certificate if one doesn't exist.
   become: true
